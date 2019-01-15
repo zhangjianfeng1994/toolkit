@@ -22,21 +22,49 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+
+import net.sf.json.JSONObject;
+
 
 public class Test {
 	public static void main(String[] args) throws ParseException {
 		
 		Test test = new Test();
-		DateFormat format=new SimpleDateFormat("yyyyMMddHHmmssSSS");
-		String time = format.format(new Date());
-		System.out.println(time);
+		//test.bitwiseOperatorsTest();
 		//test.mapTest();
 		//test.testException();
 		//System.out.println("main 方法");
 		// 测试从图片文件转换为Base64编码
        // System.out.println(GetImageStr("D:\\home\\sltf\\aaa.jpg"));
 		//test.subString();
+		Map<String, Object> reqTools = new HashMap<>();
+		reqTools.put("aa", "ss");
+		//reqTools.put("bb", null);
+		JSONObject jsonObject = new JSONObject();
+    	jsonObject.put("key", "null");
+        jsonObject.put("key2", "notNull");
+        System.out.println(jsonObject.get("key").getClass());
+        String userid = String.valueOf(jsonObject.get("key"));
+        System.out.println(!userid.equals("null"));
+	    
+        
+        List<String> transBillList = new ArrayList<>();
+        transBillList.add("1");
+        transBillList.add("2");
+        transBillList.add("3");
+        transBillList.add("4");
+        transBillList.add("5");
+        String [] custProductUserContactInfoIdArr = new String[transBillList.size()] ;
+        for (int i = 0; i < transBillList.size(); i++) {
+        	custProductUserContactInfoIdArr[i] = transBillList.get(i);
+        }
+        for (int i = 0; i < custProductUserContactInfoIdArr.length; i++) {
+			
+        	System.out.println(custProductUserContactInfoIdArr[i]);
+		}
+		
 	}
 	
 	//date时间设置
@@ -155,4 +183,12 @@ public class Test {
   		String userid = String.valueOf("");
   		System.out.println(userid);
   	}
+    //位运算符测试
+    public void bitwiseOperatorsTest() {
+    	long sequence = 128L;
+    	long sequenceMask = 2049;
+    	sequence = sequence  & sequenceMask;
+    	System.out.println(sequence);
+    }
+    
 }

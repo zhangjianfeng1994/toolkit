@@ -17,7 +17,7 @@ public class IdWorkerTest {
     } 
 
     public List<String> test2(){ 
-        final MyIdWorker w = new MyIdWorker("T304","01"); 
+        final MyIdWorker w = new MyIdWorker(); 
         final CyclicBarrier cdl = new CyclicBarrier(100); 
         List<String> list = new ArrayList<>();
         for(int i = 0; i < 100; i++){ 
@@ -31,7 +31,7 @@ public class IdWorkerTest {
                 } catch (BrokenBarrierException e) { 
                     e.printStackTrace(); 
                 }
-                System.out.println(w.nextId());
+                System.out.println(w.nextId(304));
                 //list.add(w.nextId());
                 } 
              }).start(); 
