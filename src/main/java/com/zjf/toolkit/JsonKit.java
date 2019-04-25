@@ -1,31 +1,21 @@
 package com.zjf.toolkit;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
+import com.google.gson.Gson;
 
 public final class JsonKit {
 
 	public static void main(String[] args) {
-		Map<String, Object> map = new LinkedHashMap<>(10);
-		Map<String, Object> id = new HashMap<>(2);
-		id.put("idCardName", "张建峰");
-		id.put("idCardNo", "12345");
-		List<Integer> scores = new ArrayList<>(3);
-		scores.add(91);
-		scores.add(87);
-		scores.add(12);
-		map.put("username", "邂逅");
-		map.put("id", id);
-		map.put("scores", scores);
-		System.out.println(map);
-		System.out.println(JSON.toJSONString(map));
-		System.out.println(jsonToObject(JSON.toJSONString(map)));
+		Gson gson = new Gson();
+		String aa = "{\"passportName\":\"测试\",\"manageDept\":3,\"forbidInHoliday\":null,\"forbidOutHoliday\":null}";
+		Map<String, Object> map = new Gson().fromJson(aa,Map.class);
+		
+		System.out.println(gson.toJson(map));
 	}
 
 	private JsonKit() {}

@@ -18,12 +18,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
 
 import net.sf.json.JSONObject;
 
@@ -168,7 +176,7 @@ public class Test {
 		String strSub = string.substring(4, 6);
 		System.out.println(strSub);
 	}
-    
+    @org.junit.Test
     public void mapTest() {
   		Map<String, Object> map = new HashMap<>();
   		map.put("mapFlags", "1,2".split(","));
@@ -181,14 +189,89 @@ public class Test {
   		map.put("transferList", list);
   		List<Map<String, Object>> transferList = (List<Map<String, Object>>) map.get("transferList");
   		String userid = String.valueOf("");
-  		System.out.println(userid);
+  	
+  		String aa = (String)map.get("11");
+  		String bb = String.valueOf(map.get("11"));
+  		System.out.println(String.class.isInstance(aa));
+  		System.out.println(Object.class.isInstance(aa));
+  		System.out.println(bb);
+  		System.out.println(String.class.isInstance(bb));
+  		
   	}
     //位运算符测试
+    @org.junit.Test
     public void bitwiseOperatorsTest() {
     	long sequence = 128L;
     	long sequenceMask = 2049;
     	sequence = sequence  & sequenceMask;
     	System.out.println(sequence);
     }
+    @org.junit.Test
+    public void documentTest() {
+		String originDataVar = "<?xml version=\"1.0\" encoding=\"GBK\"?><Agw><Head direction=\"request\"><requesterId>1234</requesterId><transCode>DSEC0001</transCode><reqSeriaNo>20000000032017092000000002</reqSeriaNo><platformCode>123</platformCode></Head><Body></Body></Agw>";
+		Document document;
+		try {
+			document = DocumentHelper.parseText(originDataVar);
+			System.out.println("自初始==="+document.asXML());
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    @org.junit.Test
+    public void testDate() {
+    	//取当前日期：
+    	LocalDate today = LocalDate.now(); // -> 2014-12-24
+    	DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd");
+		String nowYearMonth =  today.format(fmt);
+		System.out.println(nowYearMonth);
+    	// 取本月第1天：
+    	LocalDate firstDayOfThisMonth = today.with(TemporalAdjusters.firstDayOfMonth()); // 2017-03-01
+    	System.out.println(firstDayOfThisMonth);
+    	// 取本月第2天：
+    	LocalDate secondDayOfThisMonth = today.withDayOfMonth(2); // 2017-03-02
+    	// 取本月最后一天，再也不用计算是28，29，30还是31：
+    	LocalDate lastDayOfThisMonth = today.with(TemporalAdjusters.lastDayOfMonth()); // 2017-12-31
+    	System.out.println(lastDayOfThisMonth);
+    	// 取下一天：
+    	LocalDate firstDayOf2015 = today.plusDays(1); // 变成了2018-01-01
+    	System.out.println(firstDayOf2015);
+    	// 取2017年1月第一个周一，用Calendar要死掉很多脑细胞：
+    	LocalDate firstMondayOf2015 = LocalDate.parse("2017-01-01").with(TemporalAdjusters.firstInMonth(DayOfWeek.MONDAY)); // 2017-01-02
+    }
+    
+    @org.junit.Test
+    public void testbigdecal() {
+		BigDecimal bigss=BigDecimal.ZERO;
+		List<BigDecimal> list=new ArrayList<BigDecimal>();
+		BigDecimal transAmt = new BigDecimal("100");
+		bigss=bigss.add(transAmt);
+		System.out.println("总金额是：-----"+bigss);
+    }
+    @org.junit.Test
+    public void testsqlValidate() {
+    	String str = "";
+    	str = str.toLowerCase();//统一转为小写
+        String badStr = "'|and|exec|execute|insert|select|delete|update|count|drop|*|%|chr|mid|master|truncate|" +
+                "char|declare|sitename|net user|xp_cmdshell|;|or|-|+|,|like'|and|exec|execute|insert|create|drop|" +
+                "table|from|grant|use|group_concat|column_name|" +
+                "information_schema.columns|table_schema|union|where|select|delete|update|order|by|count|*|" +
+                "chr|mid|master|truncate|char|declare|or|;|-|--|+|,|like|//|/|%|#";//过滤掉的sql关键字，可以手动添加
+        String[] badStrs = badStr.split("\\|");
+        for (int i = 0; i < badStrs.length; i++) {
+            if (str.indexOf(badStrs[i]) >= 0) {
+                System.out.println(true);
+            }
+        }
+        String str1 = "abcdefghi";
+        boolean status = str1.contains("def");
+        if (status) {
+        	System.out.println("包含");
+        }else{
+            System.out.println("不包含");
+        }
+        System.out.println(false);
+    }
+    
     
 }
