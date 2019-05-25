@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 
@@ -197,6 +198,8 @@ public class Test {
   		System.out.println(bb);
   		System.out.println(String.class.isInstance(bb));
   		
+  		System.out.println(StringUtils.isBlank((String)map.get("slbusiid")));
+  		
   	}
     //位运算符测试
     @org.junit.Test
@@ -220,6 +223,8 @@ public class Test {
     
     @org.junit.Test
     public void testDate() {
+    	LocalDate accountTime = LocalDate.parse("2019-05-14",DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    	System.out.println(accountTime);
     	//取当前日期：
     	LocalDate today = LocalDate.now(); // -> 2014-12-24
     	DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd");
@@ -245,8 +250,9 @@ public class Test {
 		BigDecimal bigss=BigDecimal.ZERO;
 		List<BigDecimal> list=new ArrayList<BigDecimal>();
 		BigDecimal transAmt = new BigDecimal("100");
-		bigss=bigss.add(transAmt);
-		System.out.println("总金额是：-----"+bigss);
+		bigss = bigss.add(transAmt);
+		bigss = bigss.negate();
+		System.out.println("总金额是：-----:"+bigss.toString());
     }
     @org.junit.Test
     public void testsqlValidate() {
@@ -272,6 +278,14 @@ public class Test {
         }
         System.out.println(false);
     }
-    
+    @org.junit.Test
+    public void test() {
+    	 DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+         LocalDateTime time = LocalDateTime.now();
+         String localTime = df.format(time);
+         LocalDateTime ldt = LocalDateTime.parse("2018-01-12 17:07:05",df);
+         System.out.println("LocalDateTime转成String类型的时间："+localTime);
+         System.out.println("String类型的时间转成LocalDateTime："+ldt);
+	}
     
 }
