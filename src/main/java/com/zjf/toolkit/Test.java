@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,60 +20,34 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
 import net.sf.json.JSONObject;
 
 
 public class Test {
-	public static void main(String[] args) throws ParseException {
-		
-		Test test = new Test();
-		//test.bitwiseOperatorsTest();
-		//test.mapTest();
-		//test.testException();
-		//System.out.println("main 方法");
-		// 测试从图片文件转换为Base64编码
-       // System.out.println(GetImageStr("D:\\home\\sltf\\aaa.jpg"));
-		//test.subString();
-		Map<String, Object> reqTools = new HashMap<>();
-		reqTools.put("aa", "ss");
-		//reqTools.put("bb", null);
-		JSONObject jsonObject = new JSONObject();
-    	jsonObject.put("key", "null");
-        jsonObject.put("key2", "notNull");
-        System.out.println(jsonObject.get("key").getClass());
-        String userid = String.valueOf(jsonObject.get("key"));
-        System.out.println(!userid.equals("null"));
-	    
-        
-        List<String> transBillList = new ArrayList<>();
-        transBillList.add("1");
-        transBillList.add("2");
-        transBillList.add("3");
-        transBillList.add("4");
-        transBillList.add("5");
-        String [] custProductUserContactInfoIdArr = new String[transBillList.size()] ;
-        for (int i = 0; i < transBillList.size(); i++) {
-        	custProductUserContactInfoIdArr[i] = transBillList.get(i);
-        }
-        for (int i = 0; i < custProductUserContactInfoIdArr.length; i++) {
-			
-        	System.out.println(custProductUserContactInfoIdArr[i]);
-		}
+	public static void main(String[] args) {
+		String refundMsg = "[洗衣桶编号:"+11111+",在当前时间:"+LocalDateTime.now()+",无订单]";
+		String msg = "洗衣机指令接收,请求洗衣接口结果:拒绝洗衣,拒绝原因:"+refundMsg;
+		System.out.println(msg);
 		
 	}
 	
@@ -171,11 +146,25 @@ public class Test {
             return false;
         }
     }
-
+    @org.junit.Test
     public void subString() {
 		String string = "20180501" ;
-		String strSub = string.substring(4, 6);
+		String strSub = string.substring(1);
 		System.out.println(strSub);
+		List<String> mechanismNames = new ArrayList<>();
+		mechanismNames.add("学校");
+		mechanismNames.add("学院");
+		mechanismNames.add("专业");
+		mechanismNames.add("班级");
+		StringBuffer mechanismName = null;
+		for (String string1 : mechanismNames) {
+			if (mechanismName == null) {
+				mechanismName = new StringBuffer(string1);
+			}else {
+				mechanismName = mechanismName.append("/").append(string1);
+			}
+		}
+		System.out.println(mechanismName);
 	}
     @org.junit.Test
     public void mapTest() {
@@ -198,7 +187,7 @@ public class Test {
   		System.out.println(bb);
   		System.out.println(String.class.isInstance(bb));
   		
-  		System.out.println(StringUtils.isBlank((String)map.get("slbusiid")));
+  		System.out.println((String)map.get("slbusiid"));
   		
   	}
     //位运算符测试
@@ -224,6 +213,7 @@ public class Test {
     @org.junit.Test
     public void testDate() {
     	LocalDate accountTime = LocalDate.parse("2019-05-14",DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    	System.out.println(accountTime.toString().split("T")[0].replace("-", "."));
     	System.out.println(accountTime);
     	//取当前日期：
     	LocalDate today = LocalDate.now(); // -> 2014-12-24
@@ -243,6 +233,10 @@ public class Test {
     	System.out.println(firstDayOf2015);
     	// 取2017年1月第一个周一，用Calendar要死掉很多脑细胞：
     	LocalDate firstMondayOf2015 = LocalDate.parse("2017-01-01").with(TemporalAdjusters.firstInMonth(DayOfWeek.MONDAY)); // 2017-01-02
+		LocalDateTime lastDayOfThisMonthEnd = LocalDateTime.of(firstMondayOf2015, LocalTime.MAX);//当天最晚时间
+		System.out.println("当天最后时间:"+lastDayOfThisMonthEnd);
+    	LocalDateTime localDateTime = LocalDateTime.parse("2019-05-14 11:22:45",DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    	System.out.println(localDateTime.toString().split("T")[0].replace("-", "."));
     }
     
     @org.junit.Test
@@ -251,7 +245,8 @@ public class Test {
 		List<BigDecimal> list=new ArrayList<BigDecimal>();
 		BigDecimal transAmt = new BigDecimal("100");
 		bigss = bigss.add(transAmt);
-		bigss = bigss.negate();
+		//bigss = bigss.negate();
+		bigss = transAmt.subtract(bigss);
 		System.out.println("总金额是：-----:"+bigss.toString());
     }
     @org.junit.Test
@@ -278,14 +273,88 @@ public class Test {
         }
         System.out.println(false);
     }
-    @org.junit.Test
-    public void test() {
-    	 DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-         LocalDateTime time = LocalDateTime.now();
-         String localTime = df.format(time);
-         LocalDateTime ldt = LocalDateTime.parse("2018-01-12 17:07:05",df);
-         System.out.println("LocalDateTime转成String类型的时间："+localTime);
-         System.out.println("String类型的时间转成LocalDateTime："+ldt);
+
+	@org.junit.Test
+	public void testLocalTime() {
+		DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm:ss");
+		LocalDateTime time = LocalDateTime.now();
+		String localTime = df.format(time);
+		LocalDate now = LocalDate.now();
+		int year = now.getYear();
+		int month = now.getMonthValue();
+		String monthStr = String.format("%02d", month);
+		System.out.println(year+"02"+monthStr);
+		System.out.println(time.isAfter(null));
 	}
+    @org.junit.Test
+    public void testForBreak() {
+    	
+    	for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 2; j++) {
+				if (j == 1) {
+					break;
+				}
+				System.out.println("J:"+j);
+			}
+			System.out.println("I:"+i);
+		}
+    }
+    @org.junit.Test
+    public void testInteger() {
+    	Integer i = 128;
+    	Integer j = 128;
+    	System.out.println(i == j);
+    	System.out.println(i.intValue() == j.intValue());
+    	Integer m = 127;
+    	Integer n = 127;
+    	System.out.println(m == n);
+    	String string = "-";
+    	System.out.println(NumberUtils.isNumber(string));
+    }
+    
+    @org.junit.Test
+    public void testList() {
+    	List<String> list1 = new ArrayList<String>();
+    	list1.add("A");
+    	list1.add("B");
+    	list1.add("D");
+    	list1.add("E");
+    	List<String> list11 = new ArrayList<String>();
+    	list11.addAll(list1);
+    	
+    	
+        List<String> list2 = new ArrayList<String>();
+        list2.add("B");
+        list2.add("C");
+        
+        list1.removeAll(list2);
+        
+        list11.retainAll(list2);
+        
+        list2.removeAll(list11);
+        System.out.println("求差集List1中有的但是List2中没有的元素:"+list1);
+        System.out.println("求交集:"+list11);
+        System.out.println("求差集List2中有的但是List1中没有的元素:"+list2);
+    }
+    
+    @org.junit.Test
+    public void testRandom() {
+        int min = 0;
+        int max = 5;
+        for(int i=0;i<10;i++){
+            System.out.println(new Random().nextInt(max));
+        }
+    }
+    @org.junit.Test
+    public void testJson() {
+    	String orderNoItems = "{\"E106201911191025150009\":\"21196615480903729155\"}";
+    	Gson g = new Gson();
+		JsonObject json = g.fromJson(orderNoItems,JsonObject.class);
+		String[] orderNoItem = json.get("E106201911191025150009").toString().split(",");
+		String qq = orderNoItem[0];
+		qq = qq.replaceAll("\"", "");
+		System.out.println(qq);
+		System.out.println("aaa");
+    }
     
 }
