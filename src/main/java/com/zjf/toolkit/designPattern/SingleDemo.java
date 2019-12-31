@@ -1,5 +1,12 @@
 package com.zjf.toolkit.designPattern;
 
+/**
+* @ClassName: SingleDemo 
+* @Description: 单例模式
+* @author 张建峰 
+* @date 2019年12月31日 下午5:10:41 
+*
+ */
 public class SingleDemo {
 
 	// 私有构造器
